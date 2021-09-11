@@ -15,7 +15,7 @@
 typedef char Result[9];
 
 /*
-	Clears the console after every iteration of both players choosing their letters
+	Clears the console after every iteration of both players choosing their letters.
 */
 void clear_screen() {
 	#ifdef __WIN32__
@@ -73,6 +73,9 @@ void display_board(char M[5][5], char A[5]) {
     }
 }
 
+/*
+	Initializes the board with blank spaces.
+*/
 void init_board(char M[5][5]) {
 	int i, j;	
 	
@@ -81,6 +84,10 @@ void init_board(char M[5][5]) {
 			M[i][j] = ' ';	// Initialize with blank space
 }
 
+/*
+	Check if the player's input is outside the range of the set A.
+	Returns TRUE if yes (outside range), FALSE otherwise.
+*/
 int check_input_outside_range(char cInput, char A[5]) {
 	int i;
     int outside = 1;
@@ -98,6 +105,10 @@ int check_input_outside_range(char cInput, char A[5]) {
         return FALSE;
 }
 
+/*
+	Linear search through the array A / set A.
+	Returns the index.
+*/
 int get_index(char cInput, char A[5]) {
 	int i;
 	int index = -1;
@@ -110,6 +121,9 @@ int get_index(char cInput, char A[5]) {
     return index;
 }
 
+/*
+	Updates the board based on the player's input.
+*/
 void update_board(char M[5][5], char one, char two, char A[5]) {
 	int nRow, nCol;
 	
@@ -126,6 +140,10 @@ void update_board(char M[5][5], char one, char two, char A[5]) {
 	M[nRow][nCol] = 'X';
 }
 
+/*
+	Finds if both player's input constitute a set which exists in a given set (either D or E).
+	Returns TRUE if it's found, FALSE otherwise.
+*/
 int find_in_set(char set[10][2], char two, char one) {
 	int i;
 	int found = FALSE;
@@ -142,6 +160,11 @@ int find_in_set(char set[10][2], char two, char one) {
     	return FALSE;
 }
 
+/*
+	Takes the player's input then calls the find_in_set() function. 
+		If it's found, determines the set and calculates the score (value of the pos variable) accordingly.
+	Returns the score (pos value) for that particular turn/round.
+*/
 int calculate_score(char two, char one, int F, int pos) {
 	// NOTE: Set T is not included as it has no bearing on pos (i.e. doesn't affect the points/score)
 	
@@ -167,8 +190,10 @@ int calculate_score(char two, char one, int F, int pos) {
 	return pos;  // return the same value again (no change) should it be a subset of T
 }
 
-// TODO:
-int determine_winner(result, pos) {
+/*
+	Determines the winner based on the score (value of pos).
+*/
+void determine_winner(Result result, int pos) {
 	if (pos == -3)
 		strcpy(result, "Dos Wins");
 	else if (pos == 3)
@@ -278,7 +303,7 @@ int main() {
             }while(check_input_outside_range(two, A) || repeat);
             
             
-            // UPDATE STUFF
+            /* --- UPDATE STUFF --- */
 			update_board(M, one, two, A);
 			pos = calculate_score(two, one, F, pos);
 			
@@ -291,13 +316,11 @@ int main() {
         	
         }
         else {
+        	/* --- GAME END --- */
         	over = TRUE;
         	determine_winner(result, pos);
         	printf("%s", result);
 		}
-        	
-        	
-    	// TODO: over = determine_winner();
         	
         // END of loop
         F++;
