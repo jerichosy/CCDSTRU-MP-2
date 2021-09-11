@@ -1,16 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define TRUE 1
 #define FALSE 0
 
 /*
-	CCDSTRU MP - Group []
+	CCDSTRU MP - Group 13
 		SY, MATTHEW JERICHO GO
-		[]
-		[]
+		COMLA, AYRTON RAPHAEL SANTOS
+		TUANGCO, RALPH CHRISTIAN ARCIAGA
 */
 
+typedef char Result[9];
+
+/*
+	Clears the console after every iteration of both players choosing their letters
+*/
 void clear_screen() {
 	#ifdef __WIN32__
 		system("cls");
@@ -121,23 +127,54 @@ void update_board(char M[5][5], char one, char two, char A[5]) {
 }
 
 int find_in_set(char set[10][2], char two, char one) {
-	int i, j;
+	int i;
+	int found = FALSE;
 	
-	for ()
+	for (i = 0; i < 10; i++) {
+        if (two == set[i][0])
+            if (one == set[i][1])
+            	found = TRUE;
+    }
+    
+    if (found)
+    	return TRUE;
+    else
+    	return FALSE;
 }
 
-// TODO: calculate_score()
-int calculate_score(char two, char one) {
-	// set D
-	char D[10][2] = { {'L', 'V'}, {'V', 'S'}  };
+int calculate_score(char two, char one, int F, int pos) {
+	// NOTE: Set T is not included as it has no bearing on pos (i.e. doesn't affect the points/score)
 	
-	// find in set D
-	find_in_set(D, two, one)
+	// set D
+	char D[10][2] = {"LV", "VS", "SP", "PR", "RL", "RS", "PV", "SL", "VR", "LP"};  // same as char D[10][2] = { {'L', 'V'}, {'V', 'S'}, ... };
+	
+	// set E
+	char E[10][2] = {"RP", "LR", "RV", "PS", "PL", "SR", "SV", "LS", "VP", "VL"};
+	
+	if (F == 4) {
+		if (find_in_set(D, two, one))  // find in set D
+			return pos = -3;
+		if (find_in_set(E, two, one))  // find in set E
+			return pos = 3;
+	}
+	else {
+		if (find_in_set(D, two, one))  // find in set D
+			return pos += -1;
+		if (find_in_set(E, two, one))  // find in set E
+			return pos += 1;
+	}
+	
+	return pos;  // return the same value again (no change) should it be a subset of T
 }
 
 // TODO:
-int determine_winner() {
-	// Print who won here instead of main
+int determine_winner(result, pos) {
+	if (pos == -3)
+		strcpy(result, "Dos Wins");
+	else if (pos == 3)
+		strcpy(result, "Uno Wins");
+	else
+		strcpy(result, "Tie");
 }
 
 
@@ -148,28 +185,50 @@ int main() {
     // Sys init
 	char A[5] = {'R', 'P', 'S', 'L', 'V'};
     int over = 0;
-    int pos = 0;
-    int F = 0; 		// TODO: ctr?
+    int pos = 0;  // score
+    int F = 0; 
 
     char Uno, one, Dos, two;
-
-    // int turn = 1;
+    Result result;
+    
     int repeat;
 	
-	/* --- PRINT INSTRUCTIONS --- */
+	/* --- PRINT INFO --- */
+	printf("CCDSTRU MP\n");
+	printf("- SY, MATTHEW JERICHO GO\n");
+	printf("- COMLA, AYRTON RAPHAEL SANTOS\n");
+	printf("- TUANGCO, RALPH CHRISTIAN ARCIAGA\n");
+	printf("-----------------------------------\n");
+	printf("\n");
+	
 	printf("Game Instructions: \n");
     printf("- There are two players\n");
-    printf("- In each turn, a player will choose a letter from set A = {R, P, S, L, V}");
-    printf("\n\n");
+    printf("- In each turn, both players will choose a letter from set A = {R, P, S, L, V}.\n");
+    printf("- Together, both players' choices will be used to form a cartesian product G\n");
+    printf("      based on Player 2's and Player 1's choices. See scoring section for more info.\n");
+    printf("- There is a maximum of 5 turns. It's possible to win in 3 turns.\n");
+    printf("- Should the game reach the 5th turn, the result of that turn overrules all\n");
+    printf("      scores gained from all previous turns.\n");
+    printf("\n");
 
 	printf("Scoring: \n");
-    printf("- If G exists in set D, pos (score) will decrease by 1.\n");
-    printf("- If G exists in set E, pos (score) will increase by 1.\n");
-    printf("- If G exists in set T, no points will be added.\n");
+	printf("- G is the cartesian product of Player 2's and Player 1's choices.\n");
+    printf("- If G is a subset of D, the score will DECREASE by 1.\n");
+    printf("- If G is a subset of E, the score will INCREASE by 1.\n");
+    printf("- If G is a subset of T (both players' choices are the same), there is no effect on the score.\n");
+    printf("- If the score reaches either -3 or +3, the game stops and a winner is determined based on the ff:\n");
+    printf("    - If the score is -3, Player 2 wins.\n");  // Dos wins
+    printf("    - If the score is +3, Player 1 wins.\n");  // Uno wins
+    printf("\n");
 
-    printf("Scoring If |F| = 4 \n");
-    printf("If G exists in set D, uno instantly wins.\n");
-    printf("If G exists in set E, dos instantly wins.\n");
+    printf("Scoring for the final (5th) turn: \n");  // (if |F| = 4)
+    printf("- If G is a subset of D, Player 2 instantly wins.\n");  // Dos instantly wins
+    printf("- If G is a subset of E, Player 1 instantly wins.\n");  // Uno instantly wins
+    printf("\n");
+    
+    printf("Sets: \n");
+    printf("  D = { {L, V}, {V, S}, {S, P}, {P, R}, {R, L}, {R, S}, {P, V}, {S, L}, {V, R}, {L, P} }\n");
+    printf("  E = { {R, P}, {L, R}, {R, V}, {P, S}, {P, L}, {S, R}, {S, V}, {L, S}, {V, P}, {V, L} }\n");
     
 
 	/* --- GAME START --- */
@@ -177,16 +236,12 @@ int main() {
 	display_board(M, A);
 	
 	do
-	{
-		// turn = !turn;
-        // printf("\n\nIt's %s turn.", turn ? "Dos" : "Uno");
-        
-
-		// if () | TODO: Instant win?
-			
-        if (F < 4) // TODO: Change F later
+	{	
+        if (F < 5 && pos != -3 && pos != 3)
         {
-            printf("\n\nIt's %s turn.", "Uno");
+            printf("\nTurn: %d", F + 1);
+			
+			printf("\n\nIt's %s turn.", "Uno");
             do
             {
                 repeat = FALSE;
@@ -223,16 +278,24 @@ int main() {
             }while(check_input_outside_range(two, A) || repeat);
             
             
+            // UPDATE STUFF
 			update_board(M, one, two, A);
-			// TODO: pos = calculate_score(two, one);
+			pos = calculate_score(two, one, F, pos);
 			
-			// system("cls");
-			clear_screen();
+			
+			/* --- VIEW THE CHANGES --- */
+			clear_screen();  // system("cls");
         	display_board(M, A);
         	
+        	printf("\npos (Score): %d\n\n", pos);
+        	
         }
-        else
+        else {
         	over = TRUE;
+        	determine_winner(result, pos);
+        	printf("%s", result);
+		}
+        	
         	
     	// TODO: over = determine_winner();
         	
