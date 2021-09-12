@@ -310,6 +310,11 @@ int main() {
 			
 			/* --- VIEW THE CHANGES --- */
 			clear_screen();  // system("cls");
+			
+			printf("Sets: \n");
+    		printf("  D = { {L, V}, {V, S}, {S, P}, {P, R}, {R, L}, {R, S}, {P, V}, {S, L}, {V, R}, {L, P} }\n");
+    		printf("  E = { {R, P}, {L, R}, {R, V}, {P, S}, {P, L}, {S, R}, {S, V}, {L, S}, {V, P}, {V, L} }\n");
+    
         	display_board(M, A);
         	
         	printf("\npos (Score): %d\n\n", pos);
