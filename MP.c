@@ -85,16 +85,16 @@ void init_board(char M[5][5]) {
 }
 
 /*
-    Check if the player's input is outside the range of the set A.
+    Check if the player's input is outside the range of the given set/array.
     Returns TRUE if yes (outside range), FALSE otherwise.
 */
-int check_input_outside_range(char cInput, char A[5]) {
+int check_input_outside_range(char cInput, char set[5]) {
     int i;
     int outside = 1;
     
     for (i = 0; i < 5; i++) {
         // printf("%c %c\n", cInput, A[i]);
-        if (cInput == A[i])
+        if (cInput == set[i])
             outside = 0;
     }
 
@@ -213,7 +213,9 @@ int main() {
     int pos = 0;  // score
     int F = 0; 
 
-    char Uno, one, Dos, two;
+    char one, two;
+    char Uno[5] = {};
+    char Dos[5] = {};
     Result result;
     
     int repeat;
@@ -275,12 +277,12 @@ int main() {
                 
                 if (check_input_outside_range(one, A))
                     printf("    INVALID INPUT! Input a character that's within the set A.");
-                else if (one == Uno) {
-                    printf("    INVALID INPUT! You cannot input a character that you entered in your previous turn.");
+                else if (!check_input_outside_range(one, Uno)) {
+                    printf("    INVALID INPUT! You cannot input a character that you entered in your previous turns.");
                     repeat = TRUE;;
                 }
                 else
-                    Uno = one;
+                    Uno[F] = one;
 
             }while(check_input_outside_range(one, A) || repeat);
             
@@ -293,12 +295,12 @@ int main() {
                 
                 if (check_input_outside_range(two, A))
                     printf("    INVALID INPUT! Input a character that's within the set A.");
-                else if (two == Dos) {
-                    printf("    INVALID INPUT! You cannot input a character that you entered in your previous turn.");
+                else if (!check_input_outside_range(two, Dos)) {
+                    printf("    INVALID INPUT! You cannot input a character that you entered in your previous turns.");
                     repeat = TRUE;
                 }
                 else
-                    Dos = two;
+                    Dos[F] = two;
 
             }while(check_input_outside_range(two, A) || repeat);
             
