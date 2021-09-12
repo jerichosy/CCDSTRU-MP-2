@@ -231,11 +231,12 @@ int main() {
     printf("Game Instructions: \n");
     printf("- There are two players\n");
     printf("- In each turn, both players will choose a letter from set A = {R, P, S, L, V}.\n");
+    printf("- A player cannot pick a letter that they've entered in their previous turns.\n");
     printf("- Together, both players' choices will be used to form a cartesian product G\n");
     printf("      based on Player 2's and Player 1's choices. See scoring section for more info.\n");
     printf("- There is a maximum of 5 turns. It's possible to win in 3 turns.\n");
     printf("- Should the game reach the 5th turn, the result of that turn overrules all\n");
-    printf("      scores gained from all previous turns.\n");
+    printf("      scores gained from all previous turns (as long as G is not a subset of T).\n");
     printf("\n");
 
     printf("Scoring: \n");
